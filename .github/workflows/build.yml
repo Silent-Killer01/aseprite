@@ -18,18 +18,23 @@ jobs:
       - name: Install dependencies
         shell: pwsh
         run: |
-          choco install cmake ninja -y
+          choco install cmake ninja git curl unzip -y
           choco install llvm -y
-          choco install git -y
-          choco install curl unzip -y
 
       - name: Download Skia
         shell: bash
         run: |
           skia_url=$(bash ./laf/misc/skia-url.sh)
           echo "Skia URL: $skia_url"
-          curl -L -o skia.zip "$skia_url"
-          unzip skia.zip -d skia
+          curl -L -o skia_archive "$skia_url"
+
+          # Detect archive type and extract accordingly
+          if file skia_archive | grep -qi "gzip"; then
+            mkdir skia
+            tar -xzf skia_archive -C skia
+          else
+            unzip skia_archive -d skia
+          fi
 
       - name: Configure
         shell: pwsh
