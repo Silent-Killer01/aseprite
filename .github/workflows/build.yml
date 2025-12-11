@@ -24,7 +24,7 @@ jobs:
       - name: Download Skia
         shell: pwsh
         run: |
-          $skiaUrl = "https://github.com/aseprite/skia/releases/download/m111-0/skia-windows-Release-x64.zip"
+          $skiaUrl = "https://github.com/aseprite/skia/releases/download/m111-1/skia-windows-Release-x64.zip"
           $skiaFile = "skia.zip"
           Invoke-WebRequest -Uri $skiaUrl -OutFile $skiaFile
           Expand-Archive -Path $skiaFile -DestinationPath skia
