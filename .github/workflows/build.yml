@@ -1,7 +1,7 @@
 name: Build Aseprite (Windows)
 
 on:
-  workflow_dispatch:   # manual trigger
+  workflow_dispatch:
   push:
     branches: [ main ]
 
@@ -21,11 +21,11 @@ jobs:
           choco install cmake ninja -y
           choco install llvm -y
 
-      - name: Install Skia
+      - name: Download Skia
         shell: pwsh
         run: |
-          $skiaUrl = (& "$env:GITHUB_WORKSPACE\\laf\\misc\\skia-url.sh") | Select-Object -First 1
-          $skiaFile = Split-Path $skiaUrl -Leaf
+          $skiaUrl = "https://github.com/aseprite/skia/releases/download/m102-1/skia-windows-Release-x64.zip"
+          $skiaFile = "skia.zip"
           Invoke-WebRequest -Uri $skiaUrl -OutFile $skiaFile
           Expand-Archive -Path $skiaFile -DestinationPath skia
 
@@ -58,4 +58,3 @@ jobs:
         with:
           name: aseprite-portable
           path: build/aseprite-portable.zip
-
