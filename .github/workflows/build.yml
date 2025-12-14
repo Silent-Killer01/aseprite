@@ -130,7 +130,11 @@ jobs:
     - name: Copy Aseprite data folder (Windows only)
       if: runner.os == 'Windows'
       run: |
-        cp -r data build/bin/
+        if exist build/bin/data (
+          echo "Data folder already exists, skipping copy."
+        ) else (
+          cp -r data build/bin/
+        )
 
     - name: Create release zip (Windows only)
       if: runner.os == 'Windows'
