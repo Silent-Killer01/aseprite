@@ -120,6 +120,13 @@ jobs:
         cd tests
         $XVFB bash run-tests.sh
 
+    - name: Copy OpenSSL DLLs (Windows only)
+      if: runner.os == 'Windows'
+      run: |
+        choco install openssl -y
+        cp "C:/Program Files/OpenSSL/bin/libcrypto-3-x64.dll" build/bin/ || echo "libcrypto not found"
+        cp "C:/Program Files/OpenSSL/bin/libssl-3-x64.dll" build/bin/ || echo "libssl not found"
+
     - name: Upload Aseprite binary
       uses: actions/upload-artifact@v4
       with:
@@ -127,3 +134,5 @@ jobs:
         path: |
           build/bin/aseprite.exe
           build/bin/aseprite
+          build/bin/libcrypto-3-x64.dll
+          build/bin/libssl-3-x64.dll
