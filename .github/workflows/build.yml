@@ -129,22 +129,24 @@ jobs:
 
     - name: Copy Aseprite data folder (Windows only)
       if: runner.os == 'Windows'
+      shell: pwsh
       run: |
-        if exist build/bin/data (
-          echo "Data folder already exists, skipping copy."
-        ) else (
-          cp -r data build/bin/
-        )
+        if (-Not (Test-Path "build/bin/data")) {
+          Copy-Item -Recurse -Force "data" "build/bin/data"
+        } else {
+          Write-Host "Data folder already exists, skipping copy."
+        }
 
     - name: Create release zip (Windows only)
       if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         mkdir release
-        cp build/bin/aseprite.exe release/
-        cp build/bin/libcrypto-3-x64.dll release/
-        cp build/bin/libssl-3-x64.dll release/
-        cp -r build/bin/data release/
-        powershell Compress-Archive -Path release/* -DestinationPath aseprite-windows.zip
+        Copy-Item "build/bin/aseprite.exe" -Destination "release/"
+        Copy-Item "build/bin/libcrypto-3-x64.dll" -Destination "release/"
+        Copy-Item "build/bin/libssl-3-x64.dll" -Destination "release/"
+        Copy-Item "build/bin/data" -Destination "release/" -Recurse
+        Compress-Archive -Path release/* -DestinationPath aseprite-windows.zip
 
     - name: Upload Windows release package
       if: runner.os == 'Windows'
